@@ -25,4 +25,36 @@ extension Bundle {
         
         return loadedData
     }
+    
+    func fetchData<T: Decodable>(url: String, model: T.Type, completion: @escaping (Result<T, Error>) -> Void) {
+        guard let url = URL(string: url) else {
+            completion(.failure(NetworkError.invalidURL))
+            return
+        }
+
+        URLSession.shared.dataTask(with: url) { (data, response, error) in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+
+            guard let data = data else {
+                completion(.failure(NetworkError.noData))
+                return
+            }
+
+            do {
+                let decodedData = try JSONDecoder().decode(T.self, from: data)
+                completion(.success(decodedData))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+        .resume()
+    }
+
+    enum NetworkError: Error {
+        case invalidURL
+        case noData
+    }
 }
