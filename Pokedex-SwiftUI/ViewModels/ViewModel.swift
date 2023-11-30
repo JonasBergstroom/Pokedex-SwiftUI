@@ -20,4 +20,9 @@ final class ViewModel: ObservableObject {
             $0.name.contains(searchText.lowercased())
         }
     }
+    
+    init() {
+        self.pokemonList = pokemonManager.getPokemon()
+        print(self.pokemonList)
+    }
 }
