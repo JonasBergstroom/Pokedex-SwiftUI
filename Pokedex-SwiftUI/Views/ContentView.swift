@@ -29,6 +29,7 @@ struct ContentView: View {
                 .navigationTitle("Pokedex")
                 .navigationBarTitleDisplayMode(.inline)
             }
+            .searchable(text: $vm.searchText)
         }
         .environmentObject(vm)
     }
